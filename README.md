@@ -12,11 +12,7 @@ See also:
 
 ## GitHub actions for notebook execution
 
-See:
-
-- [ci-parallel.yml](.github/workflows/ci-parallel.yml) GitHub actions
-
-When you push a change into the repository, GitHub actions will prepare the runtime environment and execute the notebooks (`*.ipynb` files in the `docs/` folder) in parallel by GNU `parallel`. You can (and should) commit and push notebooks with empty output cells as execution results will be populated by GitHub actions.
+See: [ci.yml](.github/workflows/ci.yml) GitHub actions
 
 ## Jupyter Book and GitHub pages
 
@@ -58,7 +54,6 @@ GitHub actions regularly check if the links in the notebooks are valid.
 
 Binder runtime environment files:
 
-- [apt.txt](apt.txt) for apt-installed dependencies if you need them.
 - [requirements.txt](requirements.txt) for Python dependencies and [runtime.txt](runtime.txt) for Python version.
 - [Project.toml](Project.toml), [Manifest.toml](Manifest.toml), and (optionally) the [src](src/) folder for Julia dependencies.
 

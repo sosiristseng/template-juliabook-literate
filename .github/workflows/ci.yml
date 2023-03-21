@@ -1,4 +1,4 @@
-name: Build Jupyter Notebooks
+name: Jupyter Book Website
 
 on:
   push:
@@ -10,13 +10,18 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  packages: write
+  contents: write
+  pull-requests: write
+
 env:
   JULIA_DEPOT_PATH: '~/.julia'
   JULIA_NUM_THREADS: 'auto'
   JULIA_CACHE: '1'
-  TIMEOUT: 600
-  JOBS: '1'
   PYTHON_VER: '3.11'
+  GKSwstype: 100
+  IMAGE_NAME: ghcr.io/${{ github.repository }}:binder
 
 jobs:
   jupyter-book:
@@ -24,9 +29,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Install ffmpeg
-        uses: FedericoCarboni/setup-ffmpeg@v2
-        id: setup-ffmpeg
       - name: Setup Python ${{ env.PYTHON_VER }}
         uses: actions/setup-python@v4
         id: python
@@ -34,7 +36,7 @@ jobs:
           python-version: ${{ env.PYTHON_VER }}
       - name: Install Python dependencies
         run: |
-          pip install -U jupyter-book nbconvert
+          pip install -U jupyter-book
           pip install -r requirements.txt
       - name: Read Julia version
         uses: SebRollen/toml-action@v1.0.2
@@ -61,17 +63,17 @@ jobs:
           PYTHON: ${{ steps.python.outputs.python-path }}
         run: |
           julia --color=yes --project=@. -e 'import Pkg; Pkg.instantiate(); Pkg.resolve(); Pkg.precompile()'
-          julia --color=yes --project="" -e 'import Pkg; Pkg.add("IJulia"); using IJulia; installkernel("Julia", "--project=@.")'
+          julia --color=yes --project="" -e 'import Pkg; Pkg.add("Literate")'
       - name: Build notebooks
-        run: >
-          parallel --joblog /tmp/log -j${{ env.JOBS }}
-          jupyter nbconvert --to notebook
-          --ExecutePreprocessor.timeout=${{ env.TIMEOUT }}
-          --ExecutePreprocessor.kernel_name=julia-$(julia -e 'print(VERSION.major,".",VERSION.minor)')
-          --execute --inplace
-          {} ::: docs/*.ipynb
-      - name: Display execution stats
-        run: cat /tmp/log
+        run: julia --color=yes --project=@. literate.jl
+      - name: Deploy Notebooks
+        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          publish_branch: out
+          force_orphan: true
       - name: Build website
         run: jupyter-book build docs/
       - name: Upload pages artifact
@@ -80,7 +82,7 @@ jobs:
         with:
           path: docs/_build/html
 
-  # Deployment job
+  # Deployment to GH pages
   deploy:
     needs: jupyter-book
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -96,3 +98,41 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
+
+  binder:
+    needs: jupyter-book
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        ref: out
+    - name: Setup Python ${{ env.PYTHON_VER }}
+      uses: actions/setup-python@v4
+      id: python
+      with:
+        python-version: ${{ env.PYTHON_VER }}
+    - name: Install repo2docker
+      run: python3 -m pip install https://github.com/jupyterhub/repo2docker/archive/main.zip
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Build binder image with repo2docker
+      run: >
+        jupyter-repo2docker --ref out
+        --image-name ${{ env.IMAGE_NAME }}
+        --cache-from ${{ env.IMAGE_NAME }}
+        --push --no-run --user-id 1000 --user-name jovyan
+        .
+    - name: Add back binder folder and Dockerfile
+      run: |
+        mkdir -p .binder
+        echo "FROM ${{ env.IMAGE_NAME }}" >> .binder/Dockerfile
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git add .binder/Dockerfile
+        git commit -m "Generate binder dockerfile"
+        git push
