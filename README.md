@@ -1,4 +1,4 @@
-# Template publishing Julia-kerneled Jupyter notebooks
+# Template for publishing notebooks in Julia using Jupyter Book
 
 Click `Use this template` button to copy this repository.
 
@@ -10,15 +10,15 @@ See also:
 
 [Cirrus CI]: https://cirrus-ci.org/
 
-## GitHub actions for notebook execution
+## Notebook execution
 
-See: [ci.yml](.github/workflows/ci.yml) GitHub actions
+GitHub actions [ci.yml](.github/workflows/ci.yml) execute and generate Jupyter notebooks using [Literate.jl](https://github.com/fredrikekre/Literate.jl) when code is committed to repository.
 
 ## Jupyter Book and GitHub pages
 
 [Jupyter book][jupyter-book] creates a beautiful website from Markdown and Jupyter notebook files.
 
-You need to enable GitHub pages by selecting repository settings -> pages -> Build and deployment -> `GitHub Actions` as the source.
+You need to enable GitHub pages by going to `repository settings` -> pages -> Build and deployment -> selecting `GitHub Actions` as the source.
 
 [jupyter-book]: https://jupyterbook.org/
 
@@ -50,13 +50,13 @@ GitHub actions regularly check if the links in the notebooks are valid.
 
 ## Binder docker images
 
-- [binder.yml](.github/workflows/binder.yml) GitHub action
+Powered by the GitHub action [binder.yml](.github/workflows/binder.yml)
 
 Binder runtime environment files:
 
 - [requirements.txt](requirements.txt) for Python dependencies and [runtime.txt](runtime.txt) for Python version.
 - [Project.toml](Project.toml), [Manifest.toml](Manifest.toml), and (optionally) the [src](src/) folder for Julia dependencies.
 
-This GitHub action builds docker images to run notebooks online on [mybinder](https://mybinder.org/) using [repo2docker](https://repo2docker.readthedocs.io/) and pushes the resulting container to [GitHub container registry (GHCR)][ghcr]. The action also generates [.binder/Dockerfile](.binder/Dockerfile) that points to the container created by the binder acion.
+This GitHub action builds docker images to run notebooks online on [mybinder](https://mybinder.org/) using [repo2docker](https://repo2docker.readthedocs.io/) and pushes the resulting container to [GitHub container registry (GHCR)][ghcr]. The action also generates [.binder/Dockerfile](.binder/Dockerfile) in the output branch that points to the container created by the binder action.
 
 [ghcr]: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry
