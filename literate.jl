@@ -1,3 +1,5 @@
 using Literate
 
-Literate.notebook("docs/plots.jl", "docs/")
+cd("docs")
+
+Literate.notebook("plots.jl")
