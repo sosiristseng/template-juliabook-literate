@@ -34,22 +34,19 @@ jobs:
         id: python
         with:
           python-version: ${{ env.PYTHON_VER }}
+          cache: 'pip'
       - name: Install Python dependencies
-        run: |
-          pip install -U jupyter-book
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
       - name: Read Julia version
         uses: SebRollen/toml-action@v1.0.2
         id: read_toml
         with:
           file: 'Manifest.toml'
           field: 'julia_version'
-      - name: Save Julia version
-        run: echo "jlver=${{ steps.read_toml.outputs.value }}" >> $GITHUB_ENV
-      - name: Setup Julia ${{ env.jlver }}
+      - name: Setup Julia
         uses: julia-actions/setup-julia@v1
         with:
-          version: ${{ env.jlver }}
+          version: ${{ steps.read_toml.outputs.value }}
       - name: Cache Julia dependencies
         uses: actions/cache@v3
         if: ${{ env.JULIA_CACHE != '0'}}
@@ -75,7 +72,7 @@ jobs:
           publish_branch: out
           force_orphan: true
       - name: Build website
-        run: jupyter-book build docs/
+        run: pipx run jupyter-book build docs/
       - name: Upload pages artifact
         if: ${{ github.ref == 'refs/heads/main' }}
         uses: actions/upload-pages-artifact@v1
