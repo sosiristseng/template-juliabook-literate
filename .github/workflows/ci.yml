@@ -16,6 +16,7 @@ permissions:
   pull-requests: write
 
 env:
+  NPROC: '2'
   JULIA_DEPOT_PATH: '~/.julia'
   JULIA_NUM_THREADS: 'auto'
   JULIA_CACHE: '1'
@@ -62,7 +63,7 @@ jobs:
           julia --color=yes --project=@. -e 'import Pkg; Pkg.instantiate(); Pkg.resolve(); Pkg.precompile()'
           julia --color=yes --project="" -e 'import Pkg; Pkg.add("Literate")'
       - name: Build notebooks
-        run: julia --color=yes --project=@. literate.jl
+        run: julia --color=yes -p ${{ env.NPROC }} literate.jl
       - name: Deploy Notebooks
         if: ${{ github.ref == 'refs/heads/main' }}
         uses: peaceiris/actions-gh-pages@v3
