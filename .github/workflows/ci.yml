@@ -21,7 +21,6 @@ env:
   JULIA_NUM_THREADS: 'auto'
   JULIA_CACHE: '1'
   PYTHON_VER: '3.11'
-  GKSwstype: 100
   IMAGE_NAME: ghcr.io/${{ github.repository }}:binder
 
 jobs:
@@ -37,7 +36,9 @@ jobs:
           python-version: ${{ env.PYTHON_VER }}
           cache: 'pip'
       - name: Install Python dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install -U pip whell setuptools pipx
+          pip install -r requirements.txt
       - name: Read Julia version
         uses: SebRollen/toml-action@v1.0.2
         id: read_toml
