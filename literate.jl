@@ -1,4 +1,6 @@
 using Distributed
+using Literate
+using PrettyTables
 
 # For all processes
 @everywhere begin
@@ -7,8 +9,6 @@ using Distributed
     Pkg.activate(@__DIR__)
 end
 
-using Literate
-using PrettyTables
 config = Dict("mdstrings" => true)
 folder = joinpath(@__DIR__, "docs")
 nbs = [nb for nb in readdir(folder) if splitext(nb)[end] == ".jl"]
