@@ -63,7 +63,7 @@ jobs:
         run: |
           julia --color=yes --project=@. -e 'import Pkg; Pkg.instantiate(); Pkg.resolve(); Pkg.precompile()'
           julia --color=yes --project="" -e 'import Pkg; Pkg.add(["Literate", "PrettyTables"])'
-      - name: Build notebooks
+      - name: Build notebooks, ${{ env.NPROC }} processes
         run: julia --color=yes -p ${{ env.NPROC }} literate.jl
       - name: Deploy Notebooks
         if: ${{ github.ref == 'refs/heads/main' }}
