@@ -37,7 +37,7 @@ jobs:
           cache: 'pip'
       - name: Install Python dependencies
         run: |
-          pip install -U pip wheel setuptools pipx
+          pip install -U pip wheel setuptools pipx jupyter-book
           pip install -r requirements.txt
       - name: Read Julia version
         uses: SebRollen/toml-action@v1.0.2
@@ -74,7 +74,7 @@ jobs:
           publish_branch: out
           force_orphan: true
       - name: Build website
-        run: pipx run jupyter-book build docs/
+        run: jupyter-book build docs/
       - name: Upload pages artifact
         if: ${{ github.ref == 'refs/heads/main' }}
         uses: actions/upload-pages-artifact@v1
