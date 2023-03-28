@@ -11,7 +11,7 @@ end
 
 config = Dict("mdstrings" => true)
 folder = joinpath(@__DIR__, "docs")
-nbs = [nb for nb in readdir(folder) if splitext(nb)[end] == ".jl"]
+nbs = [nb for nb in readdir(folder) if endswith(nb, ".jl")]
 
 ts = pmap(nbs; on_error=ex->NaN) do nb
     @elapsed Literate.notebook(joinpath(folder, nb), folder; config)
