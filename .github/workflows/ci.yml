@@ -21,7 +21,6 @@ env:
   JULIA_NUM_THREADS: 'auto'
   JULIA_CACHE: '1'
   PYTHON_VER: '3.11'
-  IMAGE_NAME: ghcr.io/${{ github.repository }}:binder
 
 jobs:
   jupyter-book:
@@ -107,6 +106,8 @@ jobs:
       uses: actions/checkout@v3
       with:
         ref: out
+    - name: Pull previous image for caching
+      run: docker pull ghcr.io/${{ github.repository }}:binder || true
     - name: repo2docker
       uses: jupyterhub/repo2docker-action@master
       with:
@@ -116,3 +117,5 @@ jobs:
         IMAGE_NAME: ${{ github.repository }}
         BINDER_CACHE: true
         PUBLIC_REGISTRY_CHECK: true
+        ADDITIONAL_TAG: "binder"
+        LATEST_TAG_OFF: true
