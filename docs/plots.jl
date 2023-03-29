@@ -1,15 +1,15 @@
 #===
 # Plotting
 
-We test `PyPlot.jl` because the Python package `matplotlib` is tricky to install.
+using [PythonPlot.jl](https://github.com/stevengj/PythonPlot.jl)
 ===#
 
-import PyPlot as plt
+import PythonPlot
 using Random
 Random.seed!(2022)
 
-plt.plot(1:5, rand(1:6, 5))
-plt.gcf()
+plot(1:5, rand(1:6, 5))
+gcf()
 
 # ## Runtime information
 

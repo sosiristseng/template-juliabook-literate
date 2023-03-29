@@ -54,3 +54,6 @@ docs/site/
 # Manifest.toml
 
 LocalPreferences.toml
+
+# PythonCall
+.CondaPkg

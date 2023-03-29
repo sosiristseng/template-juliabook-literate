@@ -36,8 +36,12 @@ jobs:
         uses: actions/cache@v3
         if: ${{ env.JULIA_CACHE != '0'}}
         with:
-          path: ${{ env.JULIA_DEPOT_PATH }}
+          path: |
+            ${{ env.JULIA_DEPOT_PATH }}
+          # ${{ github.workspace }}/.CondaPkg
           key: ${{ runner.os }}-julia-${{ env.JULIA_CACHE }}-${{ hashFiles('**/Manifest.toml') }}
+          # restore-keys: |
+          #   ${{ runner.os }}-julia-${{ env.JULIA_CACHE }}-
       - name: Install Julia dependencies
         env:
           PYTHON: ""
