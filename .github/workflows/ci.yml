@@ -17,7 +17,7 @@ permissions:
 
 env:
   NPROC: '2'
-  JULIA_DEPOT_PATH: '/tmp/juliapkgs'
+  JULIA_DEPOT_PATH: '/srv/juliapkgs'
   JULIA_NUM_THREADS: 'auto'
   JULIA_CACHE: '2'
   PYTHON_VER: '3.11'
