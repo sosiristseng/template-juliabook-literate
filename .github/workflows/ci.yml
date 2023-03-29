@@ -114,7 +114,5 @@ jobs:
         DOCKER_REGISTRY: ghcr.io
         DOCKER_USERNAME: ${{ github.repository_owner }}
         DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-        IMAGE_NAME: ${{ github.repository }}
         BINDER_CACHE: true
         PUBLIC_REGISTRY_CHECK: true
-        ADDITIONAL_TAG: "binder"
