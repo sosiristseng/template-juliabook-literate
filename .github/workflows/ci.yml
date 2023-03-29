@@ -119,4 +119,3 @@ jobs:
         BINDER_CACHE: true
         PUBLIC_REGISTRY_CHECK: true
         ADDITIONAL_TAG: "binder"
-        LATEST_TAG_OFF: true
