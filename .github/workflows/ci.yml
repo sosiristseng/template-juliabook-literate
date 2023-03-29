@@ -48,7 +48,6 @@ jobs:
           #   ${{ runner.os }}-julia-${{ env.JULIA_CACHE }}-
       - name: Install Julia dependencies
         env:
-          PYTHON: ""
           JULIA_PROJECT: ${{ github.workspace }}
         run: julia --color=yes -e 'import Pkg; Pkg.instantiate(); Pkg.resolve(); Pkg.precompile()'
       - name: Build notebooks with ${{ env.NPROC }} processes
