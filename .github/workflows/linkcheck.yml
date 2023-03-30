@@ -29,7 +29,7 @@ jobs:
         with:
           version: '1'
       - name: Convert literate notebooks to Markdown
-        shell: julia --color=yes -t=auto {0}
+        shell: julia --color=yes {0}
         working-directory: docs/
         run: |
           import Pkg
