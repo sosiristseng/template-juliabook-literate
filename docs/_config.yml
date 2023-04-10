@@ -63,8 +63,8 @@ launch_buttons:
 # Information about where the book exists on the web
 repository:
   url: https://github.com/sosiristseng/template-juliabook-literate # Online location of your book (GitHub is recommended)
-  path_to_book: docs # Optional path to your book, relative to the repository root
-  branch: out # Which branch of the repository should be used when creating links (optional)
+  path_to_book: "" # Optional path to your book, relative to the repository root
+  branch: gh-pages # Which branch of the repository should be used when creating links (optional)
 
 #######################################################################################
 # HTML-specific settings
@@ -84,10 +84,16 @@ html:
     utterances: false
   announcement              : "" # A banner announcement at the top of the site.
 
-#######################################################################################
 # Advanced and power-user settings
 sphinx:
   extra_extensions          :   # A list of extra extensions to load by Sphinx (added to those already used by JB).
   local_extensions          :   # A list of local extensions to load by sphinx specified by "name: path" items
   recursive_update          : false # A boolean indicating whether to overwrite the Sphinx config (true) or recursively update (false)
-  config                    :   # key-value pairs to directly over-ride the Sphinx configuration
+  config:
+    mathjax_path: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+    mathjax3_config:
+      loader:
+        load: ['[tex]/mhchem']
+      tex:
+        packages:
+          '[+]': ['mhchem']
