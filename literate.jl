@@ -19,7 +19,7 @@ for (root, dirs, files) in walkdir(basedir)
 end
 
 ts = pmap(nbs; on_error=ex->NaN) do nb
-    @elapsed Literate.notebook(nb, basedir; config)
+    @elapsed Literate.notebook(nb, dirname(nb); config)
 end
 
 pretty_table([nbs ts], header=["Notebook", "Elapsed (s)"])
@@ -30,7 +30,7 @@ for (nb, t) in zip(nbs, ts)
         println("Debugging notebook: ", nb)
         try
             withenv("JULIA_DEBUG" => "Literate") do
-                Literate.notebook(joinpath(folder, nb), folder; config)
+                Literate.notebook(nb, tempdir(); config)
             end
         catch e
             println("Error occured in the cell above")
