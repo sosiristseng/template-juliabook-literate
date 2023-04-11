@@ -14,8 +14,7 @@ COPY --from=julia:1.8.5 ${JULIA_PATH} ${JULIA_PATH}
 USER ${NB_UID}
 COPY --chown=${NB_UID}:${NB_UID} Project.toml Manifest.toml ./
 COPY --chown=${NB_UID}:${NB_UID} src/ src
-RUN julia --color=yes --project="" -e 'import Pkg; Pkg.add("IJulia"); Pkg.build("IJulia")' && \
-    julia --color=yes --project=@. -e 'import Pkg; Pkg.instantiate(); Pkg.resolve(); Pkg.precompile()' && \
-    julia --color=yes --project="" -e 'import Pkg; Pkg.resolve(); Pkg.precompile()'
+RUN JULIA_PROJECT="" julia --color=yes -e 'import Pkg; Pkg.add("IJulia")' && \
+    JULIA_PROJECT="@." julia --color=yes -e 'import Pkg; Pkg.instantiate(); Pkg.resolve(); Pkg.precompile()'
 
 COPY --chown=${NB_UID}:${NB_UID} . ./
