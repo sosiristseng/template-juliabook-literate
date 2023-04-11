@@ -18,4 +18,4 @@ RUN julia --color=yes --project="" -e 'import Pkg; Pkg.add("IJulia"); Pkg.build(
     julia --color=yes --project=@. -e 'import Pkg; Pkg.instantiate(); Pkg.resolve(); Pkg.precompile()' && \
     julia --color=yes --project="" -e 'import Pkg; Pkg.resolve(); Pkg.precompile()'
 
-COPY --chown=${NB_UID}:${NB_UID} docs/ docs
+COPY --chown=${NB_UID}:${NB_UID} . ./
