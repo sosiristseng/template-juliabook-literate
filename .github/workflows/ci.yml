@@ -46,9 +46,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-julia-${{ env.JULIA_CACHE }}-
       - name: Install Julia dependencies
-        env:
-          JULIA_PROJECT: "@."
-        run: julia --color=yes -e 'import Pkg; Pkg.Registry.update(); Pkg.instantiate(); Pkg.resolve(); Pkg.precompile()'
+        run: julia --color=yes --project=@. -e 'import Pkg; Pkg.Registry.update(); Pkg.instantiate(); Pkg.resolve(); Pkg.precompile()'
       - name: Build notebooks with ${{ env.NPROC }} processes
         env:
           GKSwstype: 100
