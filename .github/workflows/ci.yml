@@ -60,9 +60,11 @@ jobs:
           cp -R src docs/_build/html/_sources
       - name: Deploy Notebooks
         if: ${{ github.ref == 'refs/heads/main' }}
-        run: |
-          git config --global --add safe.directory ${{ github.workspace }}
-          ghp-import -npfo docs/_build/html/
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/_build/html/
+          force_orphan: true
 
   binder:
     needs: jupyter-book
