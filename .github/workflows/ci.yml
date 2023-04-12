@@ -29,7 +29,10 @@ jobs:
       env:
         JULIA_DEPOT_PATH: /srv/juliapkgs
         JULIA_NUM_THREADS: 'auto'
-        PYTHON: '' # Let PyCall use built-in python
+        # Let PythonCall use built-in python
+        ENV JULIA_CONDAPKG_BACKEND: 'Null'
+        # Let PyCall use built-in python
+        PYTHON: ''
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -44,12 +47,12 @@ jobs:
             ${{ runner.os }}-julia-${{ env.JULIA_CACHE }}-
       - name: Install Julia dependencies
         env:
-          JULIA_PROJECT: ${{ github.workspace }}
+          JULIA_PROJECT: "@."
         run: julia --color=yes -e 'import Pkg; Pkg.Registry.update(); Pkg.instantiate(); Pkg.resolve(); Pkg.precompile()'
       - name: Build notebooks with ${{ env.NPROC }} processes
         env:
           GKSwstype: 100
-          JULIA_PROJECT: ${{ github.workspace }}
+          JULIA_PROJECT: "@."
         run: julia --color=yes -p ${{ env.NPROC }} literate.jl
       - name: Build website
         run: jupyter-book build docs/
