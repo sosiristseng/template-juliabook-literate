@@ -1,17 +1,16 @@
 #===
 # Plotting
 
-using [PythonPlot.jl](https://github.com/stevengj/PythonPlot.jl)
+Using [PyPlot.jl](https://github.com/JuliaPy/PyPlot.jl) since it's tricky to install and load.
 ===#
 
-using PythonPlot
+import PyPlot as plt
 using Random
 Random.seed!(2022)
 
 #---
 
-plot(1:5, rand(1:6, 5))
-gcf()
+plt.plot(1:5, rand(1:6, 5))
 
 # ## Runtime information
 

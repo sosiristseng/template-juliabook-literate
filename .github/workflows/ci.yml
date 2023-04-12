@@ -29,7 +29,7 @@ jobs:
       env:
         JULIA_DEPOT_PATH: /srv/juliapkgs
         JULIA_NUM_THREADS: 'auto'
-        JULIA_CONDAPKG_BACKEND: 'Null' # Let PythonCall use built-in python
+        PYTHON: '' # Let PyCall use built-in python
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -53,45 +53,52 @@ jobs:
         run: julia --color=yes -p ${{ env.NPROC }} literate.jl
       - name: Build website
         run: jupyter-book build docs/
-      - name: Copy binder environments
+      - name: Copy environment files for binder
         run: |
-          cp *.toml Dockerfile docs/_build/html/_sources
+          cp *.txt docs/_build/html/_sources || true
+          cp *.toml docs/_build/html/_sources
           cp -R src docs/_build/html/_sources
       - name: Deploy Notebooks
         if: ${{ github.ref == 'refs/heads/main' }}
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs/_build/html/
-          force_orphan: true
+        run: ghp-import -npfo docs/_build/html/
 
   binder:
     needs: jupyter-book
-    runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
     env:
       IMAGE_NAME: ghcr.io/${{ github.repository }}:binder
+      PYTHON_VER: '3.11'
     steps:
       - name: Checkout notebook branch
         uses: actions/checkout@v3
         with:
           ref: gh-pages
           fetch-depth: 0
+      - name: Setup Python ${{ env.PYTHON_VER }}
+        uses: actions/setup-python@v4
+        id: python
+        with:
+          python-version: ${{ env.PYTHON_VER }}
+      - name: Install repo2docker
+        run:
+          pip install -U pip setuptools wheel
+          pip install https://github.com/jupyterhub/repo2docker/archive/main.zip
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and cache Docker container
-        uses: docker/build-push-action@v4
-        with:
-          context: _sources
-          file: _sources/Dockerfile
-          tags: ${{ env.IMAGE_NAME }}
-          push: ${{ github.ref == 'refs/heads/main' }}
-          cache-from: type=registry,ref=${{ env.IMAGE_NAME }}
-          cache-to: type=inline
+      - name: Pull Image
+        run: docker pull ${{ env.IMAGE_NAME }} || true
+      - name: Build binder image with repo2docker
+        run: >
+          jupyter-repo2docker
+          --image-name ${{ env.IMAGE_NAME }}
+          --cache-from ${{ env.IMAGE_NAME }}
+          --push --no-run --user-id 1000 --user-name jovyan
+          _sources
       - name: Add binder Dockerfile
         run: |
           mkdir -p .binder
