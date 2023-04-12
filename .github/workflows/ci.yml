@@ -60,7 +60,9 @@ jobs:
           cp -R src docs/_build/html/_sources
       - name: Deploy Notebooks
         if: ${{ github.ref == 'refs/heads/main' }}
-        run: ghp-import -npfo docs/_build/html/
+        run: |
+          git config --global --add safe.directory ${{ github.workspace }}
+          ghp-import -npfo docs/_build/html/
 
   binder:
     needs: jupyter-book
