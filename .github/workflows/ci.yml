@@ -25,7 +25,6 @@ jobs:
     container:
       image: ghcr.io/sosiristseng/juliabook:1.8.5.7
       env:
-        JULIA_DEPOT_PATH: /srv/juliapkgs
         JULIA_NUM_THREADS: 'auto'
         # Let PythonCall use built-in python
         JULIA_CONDAPKG_BACKEND: 'Null'
@@ -36,8 +35,7 @@ jobs:
         uses: actions/cache@v3
         if: ${{ env.JULIA_CACHE != '0'}}
         with:
-          path: |
-            /srv/juliapkgs
+          path: ~/.julia
           key: ${{ runner.os }}-julia-${{ env.JULIA_CACHE }}-${{ hashFiles('**/Manifest.toml') }}
           restore-keys: |
             ${{ runner.os }}-julia-${{ env.JULIA_CACHE }}-
