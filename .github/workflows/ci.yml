@@ -24,8 +24,6 @@ jobs:
       JULIA_CACHE: '1'
     container:
       image: ghcr.io/sosiristseng/juliabook:1.8.5.7
-      volumes:
-        - /srv/juliapkgs
       env:
         JULIA_DEPOT_PATH: /srv/juliapkgs
         JULIA_NUM_THREADS: 'auto'
