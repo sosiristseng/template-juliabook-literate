@@ -1,4 +1,4 @@
-FROM ghcr.io/sosiristseng/juliabook:1.8.5.4
+FROM ghcr.io/sosiristseng/juliabook:1.8.5.7
 
 # Julia environment
 COPY Project.toml Manifest.toml ./
