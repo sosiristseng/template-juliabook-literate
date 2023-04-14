@@ -1,8 +1,8 @@
 name: Build binder image
 
 on:
-  check_suite:
-    type: ['completed']
+  push:
+    branches: [gh-pages]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -19,11 +19,6 @@ env:
 jobs:
   binder:
     name: Build Binder Image
-    if: >-
-      github.event.check_suite.app.name == 'Cirrus CI'
-      && github.event.check_suite.conclusion == 'success'
-      && github.event.check_suite.head_branch == 'main'
-      && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
     - name: Checkout notebook branch
@@ -47,10 +42,8 @@ jobs:
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Pull Image
-      if: ${{ hashFiles('.github/workflows/ci.yml') == '' }}
       run: docker pull ${{ env.IMAGE_NAME }} || true
     - name: Build binder image with repo2docker
-      if: ${{ hashFiles('.github/workflows/ci.yml') == '' }}
       run: >
         jupyter-repo2docker
         --image-name ${{ env.IMAGE_NAME }}
@@ -62,5 +55,4 @@ jobs:
         mkdir -p .binder
         echo "FROM ${{ env.IMAGE_NAME }}" >> .binder/Dockerfile
     - name: Push changes
-      if: ${{ hashFiles('.github/workflows/ci.yml') == '' }}
       uses: stefanzweifel/git-auto-commit-action@v4
