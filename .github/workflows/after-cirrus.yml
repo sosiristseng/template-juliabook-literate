@@ -32,27 +32,10 @@ jobs:
           echo "##[error]See $CHECK_RUN_URL for details" && false
         env:
           CHECK_RUN_URL: ${{ fromJson(steps.get_failed_check_run.outputs.data).check_runs[0].html_url }}
-  prebinder:
+  binder:
+    # Remove the false line if you are using Cirrus CI for publishing
     if: >-
       github.event.check_suite.app.name == 'Cirrus CI'
       && github.event.check_suite.conclusion == 'success'
-    outputs:
-      doit: ${{ steps.setoutput.outputs.doit }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Do subsequent step if ci.yml is not found
-        id: setoutput
-        run: |
-          if [[ -f .github/workflows/ci.yml ]]; then
-            echo "Found ci.yml"
-            echo "doit=false" >> $GITHUB_OUTPUT
-          else
-            echo "ci.yml not found"
-            echo "doit=true" >> $GITHUB_OUTPUT
-          fi
-  binder:
-    needs: prebinder
-    if: ${{ needs.prebinder.outputs.doit == true }}
+      && false
     uses: ./.github/workflows/binder.yml
