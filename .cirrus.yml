@@ -8,7 +8,7 @@ jupyter_book_task:
     JULIA_PROJECT: $CIRRUS_WORKING_DIR
     JULIA_NUM_PRECOMPILE_TASKS: 4
   container:
-    dockerfile: cirrus/Dockerfile
+    dockerfile: cirrus.Dockerfile
     cpu: 1
     memory: 4G
     greedy: true
