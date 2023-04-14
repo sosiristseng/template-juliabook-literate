@@ -54,5 +54,5 @@ jobs:
           fi
   binder:
     needs: prebinder
-    if: ${{ needs.prebinder.outputs.doit }}
+    if: ${{ needs.prebinder.outputs.doit == true }}
     uses: ./.github/workflows/binder.yml
