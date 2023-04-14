@@ -61,4 +61,5 @@ jobs:
           publish_dir: docs/_build/html/
           force_orphan: true
   binder:
+    needs: jupyter-book
     uses: ./.github/workflows/binder.yml
