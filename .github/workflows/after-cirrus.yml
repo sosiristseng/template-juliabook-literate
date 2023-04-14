@@ -11,6 +11,7 @@ jobs:
       && github.event.check_suite.conclusion != 'success'
       && github.event.check_suite.conclusion != 'cancelled'
       && github.event.check_suite.conclusion != 'neutral'
+      && github.event.check_suite.conclusion != 'skipped'
     runs-on: ubuntu-latest
     steps:
       - uses: octokit/request-action@v2.x
@@ -27,3 +28,12 @@ jobs:
           echo "##[error]See $CHECK_RUN_URL for details" && false
         env:
           CHECK_RUN_URL: ${{ fromJson(steps.get_failed_check_run.outputs.data).check_runs[0].html_url }}
+  binder:
+    if: >-
+      github.event.check_suite.app.name == 'Cirrus CI'
+      && github.event.check_suite.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build binder image
+        if: ${{ hashFiles('.github/workflows/ci.yml') == '' }}
+        uses: ./.github/workflows/binder.yml
