@@ -44,7 +44,14 @@ jobs:
         uses: actions/checkout@v3
       - name: Do subsequent step if ci.yml is not found
         id: setoutput
-        run: echo "doit=! test .github/workflows/ci.yml" >> $GITHUB_OUTPUT
+        run: |
+          if [[ -f .github/workflows/ci.yml ]]; then
+            echo "Found ci.yml"
+            echo "doit=false" >> $GITHUB_OUTPUT
+          else
+            echo "ci.yml not found"
+            echo "doit=true" >> $GITHUB_OUTPUT
+          fi
   binder:
     needs: prebinder
     if: ${{ needs.prebinder.outputs.doit }}
