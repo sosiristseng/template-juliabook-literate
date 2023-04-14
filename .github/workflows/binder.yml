@@ -7,18 +7,16 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-permissions:
-  packages: write
-  contents: write
-
-env:
-  IMAGE_NAME: ghcr.io/${{ github.repository }}:binder
-  PYTHON_VER: '3.11'
-
 jobs:
   binder:
     name: Build Binder Image
     runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: ghcr.io/${{ github.repository }}:binder
+      PYTHON_VER: '3.11'
+    permissions:
+      packages: write
+      contents: write
     steps:
     - name: Checkout notebook branch
       uses: actions/checkout@v3

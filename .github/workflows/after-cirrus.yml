@@ -2,7 +2,11 @@ on:
   check_suite:
     type: ['completed']
 
-name: Email about Cirrus CI failures
+permissions:
+  packages: write
+  contents: write
+
+name: After Cirrus CI
 jobs:
   continue:
     name: After Cirrus CI Failure
@@ -28,12 +32,20 @@ jobs:
           echo "##[error]See $CHECK_RUN_URL for details" && false
         env:
           CHECK_RUN_URL: ${{ fromJson(steps.get_failed_check_run.outputs.data).check_runs[0].html_url }}
-  binder:
+  prebinder:
     if: >-
       github.event.check_suite.app.name == 'Cirrus CI'
       && github.event.check_suite.conclusion == 'success'
+    outputs:
+      doit: ${{ steps.setoutput.outputs.doit }}
     runs-on: ubuntu-latest
     steps:
-      - name: Build binder image
-        if: ${{ hashFiles('.github/workflows/ci.yml') == '' }}
-        uses: ./.github/workflows/binder.yml
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Do subsequent step if ci.yml is not found
+        id: setoutput
+        run: echo "doit=! test .github/workflows/ci.yml" >> $GITHUB_OUTPUT
+  binder:
+    needs: prebinder
+    if: ${{ needs.prebinder.outputs.doit }}
+    uses: ./.github/workflows/binder.yml

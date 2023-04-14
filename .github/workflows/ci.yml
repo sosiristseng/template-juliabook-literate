@@ -60,5 +60,5 @@ jobs:
           github_token: ${{ github.token }}
           publish_dir: docs/_build/html/
           force_orphan: true
-      - name: Build binder image
-        uses: ./.github/workflows/binder.yml
+  binder:
+    uses: ./.github/workflows/binder.yml
