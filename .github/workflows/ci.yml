@@ -53,8 +53,8 @@ jobs:
           cp *.txt $DEST || true
           cp *.toml $DEST
           cp -R src $DEST
-          mkdir -p $DEST/.github/workflows
-          cp .github/workflows/binder.yml $DEST/.github/workflows
+          mkdir -p docs/_build/html/.github/workflows
+          cp .github/workflows/binder.yml docs/_build/html/.github/workflows
       - name: Deploy Notebooks
         if: ${{ github.ref == 'refs/heads/main' }}
         uses: peaceiris/actions-gh-pages@v3
