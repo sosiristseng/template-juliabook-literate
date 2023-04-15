@@ -62,4 +62,5 @@ jobs:
           force_orphan: true
   binder:
     needs: jupyter-book
+    if: ${{ github.ref == 'refs/heads/main' }}
     uses: ./.github/workflows/binder.yml
