@@ -16,4 +16,5 @@ jobs:
       pull-requests: write
     uses: sosiristseng/jbook-workflows/.github/workflows/update-manifest.yml@main
     secrets:
-      inherit
+      APP_ID: ${{ secrets.APP_ID }}
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
