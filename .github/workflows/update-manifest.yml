@@ -4,6 +4,11 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * 1' # Every week
+  push:
+    branches:
+      main
+    paths:
+      .github/workflows/update-manifest.yml
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
