@@ -51,7 +51,7 @@ jobs:
           DEST: docs/_build/html/_sources
         run: |
           cp *.txt $DEST || true
-          cp *.toml $DEST
+          cp Project.toml Manifest.toml $DEST
           cp -R src $DEST
       - name: Deploy Notebooks
         if: ${{ github.ref == 'refs/heads/main' }}
@@ -63,7 +63,7 @@ jobs:
   binder:
     needs: jupyter-book
     if: ${{ github.ref == 'refs/heads/main' }}
-    uses: sosiristseng/jbook-workflows/.github/workflows/binder.yml@main
+    uses: sosiristseng/juliabook/.github/workflows/binder.yml@main
     with:
         dir: _sources
         ref: gh-pages

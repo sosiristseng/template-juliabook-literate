@@ -14,7 +14,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    uses: sosiristseng/jbook-workflows/.github/workflows/update-manifest.yml@main
+    uses: sosiristseng/juliabook/.github/workflows/update-manifest.yml@main
     secrets:
       APP_ID: ${{ secrets.APP_ID }}
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
