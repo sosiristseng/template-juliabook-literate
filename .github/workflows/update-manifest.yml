@@ -6,9 +6,9 @@ on:
     - cron: '0 0 * * 1' # Every week
   push:
     branches:
-      main
+      - main
     paths:
-      .github/workflows/update-manifest.yml
+      - .github/workflows/update-manifest.yml
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
