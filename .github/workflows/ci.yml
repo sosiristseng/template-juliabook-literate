@@ -23,7 +23,7 @@ jobs:
       NPROC: '2'
       JULIA_CACHE: '1'
     container:
-      image: ghcr.io/sosiristseng/juliabook:1.8.5.7
+      image: ghcr.io/sosiristseng/juliabook:1.8.5
       env:
         JULIA_NUM_THREADS: 'auto'
         # Let PythonCall use built-in python
@@ -74,5 +74,5 @@ jobs:
     if: ${{ github.ref == 'refs/heads/main' }}
     uses: sosiristseng/juliabook/.github/workflows/binder.yml@main
     with:
-        dir: _sources
-        ref: gh-pages
+      dir: _sources
+      ref: gh-pages
