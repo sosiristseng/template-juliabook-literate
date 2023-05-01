@@ -118,6 +118,8 @@ jobs:
         with:
           title: Binder dockerfile update
           branch: binderfile
+          add-paths: |
+            .binder/Dockerfile
 
   deploy:
     name: Deploy to GitHub pages
