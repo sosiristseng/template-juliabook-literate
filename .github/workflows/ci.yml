@@ -13,6 +13,7 @@ concurrency:
 
 jobs:
   jupyter-book:
+    name: Jupyter Book
     runs-on: ubuntu-latest
     env:
       NPROC: '2'
