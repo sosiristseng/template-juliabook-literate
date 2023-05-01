@@ -1,4 +1,4 @@
-name: Jupyter Book Website
+name: Build notebooks and publish
 
 on:
   workflow_dispatch:
