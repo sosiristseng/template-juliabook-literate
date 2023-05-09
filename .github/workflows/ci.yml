@@ -29,6 +29,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      - name: Install Python dev
+        run: pip install -r requirements.txt
       - name: Setup Julia ${{ env.JULIA_VER }}
         uses: julia-actions/setup-julia@v1
         with:
