@@ -52,6 +52,7 @@ jobs:
       - name: Upload built artifact
         uses: actions/upload-artifact@v3
         with:
+          name: notebooks
           path: docs
       - name: Build website
         run: jupyter-book build docs
