@@ -42,7 +42,7 @@ jobs:
         run: |
           JULIA_PROJECT="" julia --color=yes -e 'import Pkg; Pkg.Registry.update(); Pkg.add(["Literate", "PrettyTables"])'
           JULIA_PROJECT=@. julia --color=yes -e 'import Pkg; Pkg.instantiate(); Pkg.resolve(); Pkg.precompile(); Pkg.gc()'
-          JULIA_PROJECT=@. julia --color=yes -e 'if any(x -> x.name == "PyPlot", values(Pkg.dependencies())) import PyPlot; end'
+          JULIA_PROJECT=@. julia --color=yes -e 'import Pkg; if any(x -> x.name == "PyPlot", values(Pkg.dependencies())) import PyPlot; end'
       - name: Save Julia dependencies
         uses: actions/cache/save@v3
         if: ${{ steps.restore-cache.outputs.cache-hit != 'true' && env.JULIA_CACHE != '0' }}
