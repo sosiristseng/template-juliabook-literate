@@ -71,7 +71,7 @@ jobs:
       - name: Download built notebooks
         uses: actions/download-artifact@v3
         with:
-          name: notebook
+          name: notebooks
           path: out/
       - name: Copy back built notebooks
         run: cp --verbose -rf out/docs/* docs/
