@@ -13,6 +13,7 @@ concurrency:
 
 env:
   PYTHON_VER: '3.11'
+  JULIA_VER: '1.8'
 
 jobs:
   jupyter-book:
@@ -22,12 +23,16 @@ jobs:
       NPROC: '2'
       JULIA_CACHE: '4'
     container:
-      image: ghcr.io/sosiristseng/juliabook:1.8.5
+      image: ghcr.io/sosiristseng/docker-jupyterbook:0.15.1
       env:
         GKSwstype: 100
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      - name: Setup Julia ${{ env.JULIA_VER }}
+        uses: julia-actions/setup-julia@v1
+        with:
+          version: ${{ env.JULIA_VER }}
       - name: Restore Julia dependencies
         id: restore-cache
         uses: actions/cache/restore@v3
