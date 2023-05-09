@@ -15,17 +15,16 @@ env:
   PYTHON_VER: '3.11'
 
 jobs:
-  execute:
-    name: Execute literate notebooks
+  jupyter-book:
+    name: Jupyter Book
     runs-on: ubuntu-latest
     env:
       NPROC: '2'
-      JULIA_CACHE: '3'
+      JULIA_CACHE: '4'
     container:
-      image: julia:1.8.5
+      image: ghcr.io/sosiristseng/juliabook:1.8.5
       env:
         GKSwstype: 100
-        Python: ''
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -42,7 +41,6 @@ jobs:
         run: |
           JULIA_PROJECT="" julia --color=yes -e 'import Pkg; Pkg.Registry.update(); Pkg.add(["Literate", "PrettyTables"])'
           JULIA_PROJECT=@. julia --color=yes -e 'import Pkg; Pkg.instantiate(); Pkg.resolve(); Pkg.precompile(); Pkg.gc()'
-          JULIA_PROJECT=@. julia --color=yes -e 'import Pkg; if any(x -> x.name == "PyPlot", values(Pkg.dependencies())) import PyPlot; end'
       - name: Save Julia dependencies
         uses: actions/cache/save@v3
         if: ${{ steps.restore-cache.outputs.cache-hit != 'true' && env.JULIA_CACHE != '0' }}
@@ -51,55 +49,16 @@ jobs:
           key: ${{ steps.restore-cache.outputs.cache-primary-key }}
       - name: Build notebooks with ${{ env.NPROC }} processes
         run: JULIA_PROJECT=@. julia --color=yes -p ${{ env.NPROC }} literate.jl
-      - name: Upload built notebooks
+      - name: Upload built artifact
         uses: actions/upload-artifact@v3
         with:
-          name: notebooks
           path: docs
-          retention-days: 1
-
-  jupyter-book:
-    name: Jupyter Book
-    needs: execute
-    runs-on: ubuntu-latest
-    # output success flag for CI
-    outputs:
-      success: ${{ steps.setoutput.outputs.success }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Download built notebooks
-        uses: actions/download-artifact@v3
-        with:
-          name: notebooks
-          path: out/
-      - name: Copy back built notebooks
-        run: cp --verbose -rf out/* docs/
-      - name: Setup Python ${{ env.PYTHON_VER }}
-        uses: actions/setup-python@v4
-        id: python
-        with:
-          python-version: ${{ env.PYTHON_VER }}
-      - uses: syphar/restore-virtualenv@v1
-        id: cache-virtualenv
-        with:
-          requirement_files: .github/requirements.txt  # this is optional
-      - uses: syphar/restore-pip-download-cache@v1
-        if: steps.cache-virtualenv.outputs.cache-hit != 'true'
-        # the package installation will only be executed when the
-        # requirements-files have changed.
-      - name: Install Python dependencies
-        run: pip install -r .github/requirements.txt
-        if: steps.cache-virtualenv.outputs.cache-hit != 'true'
       - name: Build website
-        run: jupyter-book build docs/
+        run: jupyter-book build docs
       - name: Upload artifact for GH pages
         uses: actions/upload-pages-artifact@v1
         with:
-          path: docs/_build/html/
-      - name: Set output flag
-        id: setoutput
-        run: echo "success=true" >> $GITHUB_OUTPUT
+          path: docs/_build/html
 
   binder:
     name: Build binder image
