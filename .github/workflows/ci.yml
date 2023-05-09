@@ -13,7 +13,7 @@ concurrency:
 
 env:
   PYTHON_VER: '3.11'
-  JULIA_VER: '1.8'
+  JULIA_VER: '1.9'
 
 jobs:
   jupyter-book:
