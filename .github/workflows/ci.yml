@@ -74,7 +74,7 @@ jobs:
           name: notebooks
           path: out/
       - name: Copy back built notebooks
-        run: cp --verbose -rf out/docs/* docs/
+        run: cp --verbose -rf out/* docs/
       - name: Setup Python ${{ env.PYTHON_VER }}
         uses: actions/setup-python@v4
         id: python
