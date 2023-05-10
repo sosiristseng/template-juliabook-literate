@@ -1,7 +1,7 @@
 #===
 # Plotting
 
-Using [PyPlot.jl](https://github.com/JuliaPy/PyPlot.jl) since it's tricky to install and load.
+Using [PyPlot.jl](https://github.com/JuliaPy/PyPlot.jl) since this package is tricky to install and load.
 ===#
 
 import PyPlot as plt
