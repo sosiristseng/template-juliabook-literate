@@ -14,9 +14,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  JULIA_VER: '1.9'
-
 jobs:
   update-manifest:
     permissions:
@@ -26,10 +23,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup Julia ${{ env.JULIA_VER }}
+      - name: Setup Julia
         uses: julia-actions/setup-julia@v1
-        with:
-          version: ${{ env.JULIA_VER }}
       - name: Update Julia dependencies
         env:
           JULIA_PKG_PRECOMPILE_AUTO: 0
