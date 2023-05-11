@@ -20,15 +20,17 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NPROC: '2'       # Number of Julia processes to run the notebooks
-      JULIA_CACHE: '1' # Set this env var zero to disable caching
-    container:
-      image: python:3.11.3-slim
-      env:
-        GKSwstype: 100
-        JULIA_NUM_THREADS: 'auto'
+      JULIA_CACHE: '2' # Set this env var zero to disable caching
+      GKSwstype: 100
+      JULIA_NUM_THREADS: 'auto'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      - name: Setup Python ${{ env.PYTHON_VER }}
+        uses: actions/setup-python@v4
+        id: python
+        with:
+          python-version: ${{ env.PYTHON_VER }}
       - name: Install Python dep
         run: pip install -r requirements.txt
       - name: Read Julia version
