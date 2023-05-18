@@ -20,6 +20,7 @@ jobs:
       JULIA_CACHE: '2' # Set this env var zero to disable caching
       GKSwstype: 100
       JULIA_NUM_THREADS: 'auto'
+      JULIA_CONDAPKG_BACKEND: 'Null'
     container:
       image: python:3.11.3-slim
     steps:
