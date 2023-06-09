@@ -34,7 +34,7 @@ jobs:
         uses: actions/cache@v3.2.4
         id: pycache
         with:
-          path: ${{ env.pythonLocation }}/lib/site-packages
+          path: ${{ env.pythonLocation }}/lib/python${{ env.PY_VER }}/site-packages
           key: ${{ env.pythonLocation }}-site-packages-${{ hashFiles('**/requirements.txt') }}
       - name: Install Python dependencies
         run: pip install -r requirements.txt -r .github/requirements.txt
