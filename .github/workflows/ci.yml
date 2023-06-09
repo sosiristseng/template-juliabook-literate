@@ -13,7 +13,7 @@ concurrency:
 
 env:
   NPROC: '2'                      # Number of Julia processes to run the notebooks
-  JULIA_CACHE: '2'                # Set this '0' to disable caching
+  JULIA_CACHE: '1'                # Set this '0' to disable caching
   JULIA_CONDAPKG_BACKEND: 'Null'  # Use installed python for PythonCall.jl
   GKSwstype: 100                  # Non-interactive plotting
   JULIA_NUM_THREADS: 'auto'
@@ -57,8 +57,8 @@ jobs:
           path: |
             ~/.julia
           key: ${{ runner.os }}-julia-${{ env.JULIA_CACHE }}-${{ hashFiles('**/Manifest.toml') }}
-          # restore-keys: |
-          #   ${{ runner.os }}-julia-${{ env.JULIA_CACHE }}-
+          restore-keys: |
+            ${{ runner.os }}-julia-${{ env.JULIA_CACHE }}-
       - name: Install Julia dependencies
         shell: julia --project=@. --color=yes {0}
         env:
