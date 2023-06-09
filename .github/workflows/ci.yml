@@ -76,7 +76,7 @@ jobs:
           key: ${{ steps.restore-cache.outputs.cache-primary-key }}
       - name: Build notebooks with ${{ env.NPROC }} processes
         run: JULIA_PROJECT=@. julia --color=yes -p ${{ env.NPROC }} literate.jl
-      - name: Build website
+      - name: Build website with Jupyter Book
         run: jupyter-book build docs/
       - name: Upload artifact for GH pages
         uses: actions/upload-pages-artifact@v1
