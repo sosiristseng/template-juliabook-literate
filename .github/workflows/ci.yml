@@ -33,7 +33,7 @@ jobs:
         with:
           python-version: ${{ env.PY_VER }}
       - name: Cache pip dependencies
-        uses: actions/cache@v3.2.4
+        uses: actions/cache@v3.3.1
         id: pycache
         with:
           path: ${{ env.pythonLocation }}
