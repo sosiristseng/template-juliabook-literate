@@ -48,17 +48,18 @@ jobs:
           key: ${{ runner.os }}-julia-${{ env.JULIA_CACHE }}-${{ hashFiles('**/Manifest.toml') }}
           # restore-keys: |
           #   ${{ runner.os }}-julia-${{ env.JULIA_CACHE }}-
+      - name: Install Literate
+        shell: julia --project="" --color=yes {0}
+        run: |
+          import Pkg
+          Pkg.Registry.update()
+          Pkg.add(["Literate", "PrettyTables"])
       - name: Install Julia dependencies
         shell: julia --project=@. --color=yes {0}
         run: |
           import Pkg
           Pkg.Registry.update()
           Pkg.instantiate()
-      - name: Install Literate
-        shell: julia --project="" --color=yes {0}
-        run: |
-          import Pkg
-          Pkg.add(["Literate", "PrettyTables"])
           Pkg.resolve()
           Pkg.precompile()
           Pkg.gc()
