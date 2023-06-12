@@ -17,28 +17,17 @@ env:
   JULIA_CONDAPKG_BACKEND: 'Null'  # Use installed python for PythonCall.jl
   GKSwstype: 100                  # Non-interactive plotting
   JULIA_NUM_THREADS: 'auto'
-  PY_VER: '3.11'
 
 jobs:
   CI:
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/sosiristseng/docker-jupyterbook:latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Setup Python ${{ env.PY_VER }}
-        uses: actions/setup-python@v4
-        id: python
-        with:
-          python-version: ${{ env.PY_VER }}
-      - name: Cache pip dependencies
-        uses: actions/cache@v3.2.4
-        id: pycache
-        with:
-          path: ${{ env.pythonLocation }}
-          key: ${{ env.pythonLocation }}-${{ hashFiles('**/requirements.txt') }}
       - name: Install Python dependencies
-        run: pip install -r requirements.txt -r .github/requirements.txt
-        if: steps.pycache.outputs.cache-hit != 'true'
+        run: pip install --no-cache-dir -r requirements.txt
       - name: Read Julia version
         id: read_toml
         uses: SebRollen/toml-action@v1.0.2
@@ -57,16 +46,19 @@ jobs:
           path: |
             ~/.julia
           key: ${{ runner.os }}-julia-${{ env.JULIA_CACHE }}-${{ hashFiles('**/Manifest.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-julia-${{ env.JULIA_CACHE }}-
+          # restore-keys: |
+          #   ${{ runner.os }}-julia-${{ env.JULIA_CACHE }}-
       - name: Install Julia dependencies
         shell: julia --project=@. --color=yes {0}
-        env:
-          PYTHON: ${{ steps.python.outputs.python-path }}
         run: |
           import Pkg
           Pkg.Registry.update()
           Pkg.instantiate()
+      - name: Install Literate
+        shell: julia --project="" --color=yes {0}
+        run: |
+          import Pkg
+          Pkg.add(["Literate", "PrettyTables"])
           Pkg.resolve()
           Pkg.precompile()
           Pkg.gc()
