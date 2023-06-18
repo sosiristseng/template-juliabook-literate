@@ -17,6 +17,7 @@ env:
   JULIA_CONDAPKG_BACKEND: 'Null'  # Use installed python for PythonCall.jl
   GKSwstype: 100                  # Non-interactive plotting
   JULIA_NUM_THREADS: 'auto'
+  JULIA_CPU_TARGET: generic;sandybridge,-xsaveopt,clone_all;haswell,-rdrnd,base(1);broadwell
 
 jobs:
   CI:
@@ -47,8 +48,8 @@ jobs:
           path: |
             ~/.julia
           key: ${{ runner.os }}-julia-${{ env.JULIA_CACHE }}-${{ hashFiles('**/Manifest.toml') }}
-          # restore-keys: |
-          #   ${{ runner.os }}-julia-${{ env.JULIA_CACHE }}-
+          restore-keys: |
+            ${{ runner.os }}-julia-${{ env.JULIA_CACHE }}-
       - name: Install Julia dependencies
         run: |
           julia --project="" --color=yes -e 'import Pkg; Pkg.Registry.update(); Pkg.add(["Literate", "PrettyTables"])'
