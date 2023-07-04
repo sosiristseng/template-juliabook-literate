@@ -35,7 +35,7 @@ for (nb, t) in zip(nbs, ts)
                 Literate.notebook(nb, tempdir(); config)
             end
         catch e
-            println("An error occured in the cell above:", e)
+            println("An error occured:", e)
         end
     end
 end
