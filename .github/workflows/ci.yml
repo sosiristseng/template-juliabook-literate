@@ -30,6 +30,7 @@ jobs:
           context: .
           file: ${{ env.DFILE }}
           tags: ${{ env.DIMG }}
+          load: true
           cache-from: type=gha
           cache-to: type=gha
       - name: Execute Notebook
